@@ -83,7 +83,7 @@ CallGraph* GraphReader::read(const string& file) {
 void GraphReader::parseEdges(CallGraph& graph) {
     CallSiteIterator first, last;
     for (boost::tie(first, last) = graph.callSites(); first != last; ++first) {
-        CallSiteInfo& callSite = graph[*first];
+        auto& callSite = graph[*first];
 
         string label = callSite.label;
 
@@ -159,7 +159,7 @@ void GraphReader::parseVertices(CallGraph& graph) {
 
     FunctionIterator first, last;
     for (boost::tie(first, last) = graph.functions(); first != last; ++first) {
-        FunctionInfo& function = graph[*first];
+        auto& function = graph[*first];
 
         //Demangle only if necessary
         if (infos.isDemangled()) {
@@ -201,7 +201,7 @@ void GraphReader::parseVertices(CallGraph& graph) {
 
     //Once we have the total of calls we can compute the frequency
     for (boost::tie(first, last) = graph.functions(); first != last; ++first) {
-        FunctionInfo& function = graph[*first];
+        auto& function = graph[*first];
         function.frequency = static_cast<double>(function.calls) / static_cast<double>(totalCalls);
     }
 

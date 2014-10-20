@@ -521,7 +521,7 @@ std::vector<std::vector<std::string>> Analyzer::findCircularDependencies() const
     std::vector<Library> components(num_vertices(dependencyGraph));
 
     //Use of Tarjan's Strongly connected components
-    unsigned int num = strong_components(dependencyGraph, &components[0], vertex_index_map(get(vertex_index, dependencyGraph)));
+    unsigned int num = strong_components(dependencyGraph, make_iterator_property_map(components.begin(), get(vertex_index, dependencyGraph), components[0]));
 
     std::map<Library, std::vector<std::string>> circularDependencies;
 

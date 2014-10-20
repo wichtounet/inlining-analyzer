@@ -106,18 +106,6 @@ typedef boost::graph_traits<Graph>::edge_descriptor CallSite;
  */
 typedef boost::graph_traits<Graph>::vertex_descriptor Function;
 
-//Bundles
-
-/*!
- * \brief A call site bundle. This object is the stored representation of the call site.
- */
-typedef boost::graph_detail::edge_prop<edge_info>::bundle CallSiteInfo;
-
-/*!
- * \brief A function bundle. This object is the stored representation of the function.
- */
-typedef boost::graph_detail::vertex_prop<vertex_info>::bundle FunctionInfo;
-
 //---
 //Graph for circular dependencies analysis
 //---
@@ -133,7 +121,7 @@ struct library_info {
 /*!
  * \brief A dependency graph. Used only to generate the circular dependencies.
  */
-typedef boost::adjacency_list < boost::setS, boost::vecS, boost::directedS, library_info> DependencyGraph;
+typedef boost::adjacency_list < boost::setS, boost::vecS, boost::directedS, vertex_info, edge_info, library_info> DependencyGraph;
 
 //Descriptors
 

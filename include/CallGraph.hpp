@@ -150,8 +150,8 @@ class CallGraph {
          * \param f the function descriptor
          * \return The function information
         */
-        FunctionInfo& operator[](Function f) {
-            return boost::get(boost::vertex_bundle, *graph)[f];
+        vertex_info& operator[](Function f) {
+            return (*graph)[f];
         }
 
         /*!
@@ -159,8 +159,8 @@ class CallGraph {
          * \param f the function descriptor
          * \return The function information
         */
-        const FunctionInfo& operator[](Function f) const {
-            return boost::get(boost::vertex_bundle, *graph)[f];
+        const vertex_info& operator[](Function f) const {
+            return (*graph)[f];
         }
 
         /*!
@@ -168,8 +168,8 @@ class CallGraph {
          * \param c the call site descriptor
          * \return The call site information
         */
-        CallSiteInfo& operator[](CallSite c) {
-            return boost::get(boost::edge_bundle, *graph)[c];
+        edge_info& operator[](CallSite c) {
+            return (*graph)[c];
         }
 
         /*!
@@ -177,8 +177,8 @@ class CallGraph {
          * \param c the call site descriptor
          * \return The call site information
         */
-        const CallSiteInfo& operator[](CallSite c) const {
-            return boost::get(boost::edge_bundle, *graph)[c];
+        const edge_info& operator[](CallSite c) const {
+            return (*graph)[c];
         }
 
     private:
