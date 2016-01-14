@@ -249,7 +249,7 @@ void benchHierarchy(CallGraph& graph) {
 
     analyzer.findVirtualHierarchyIssues();
 
-    cout << "\tHierarchy done in " << timer.elapsed() << "ms" << endl; // (" << circularDependencies.size() << ")" << endl;
+    cout << "\tHierarchy done in " << timer.elapsed() << "ms" << endl;
 }
 
 void displayResults() {
