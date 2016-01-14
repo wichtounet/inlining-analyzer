@@ -33,6 +33,8 @@ using namespace inlining;
 
 void printUsage();
 
+bool parse_value_arg(const std::string& arg, Inlining& inlining);
+
 int main(int argc, const char* argv[]) {
     if (argc < 2) {
         cout << "Not enough arguments. Provide at least the dot file to read" << endl;
@@ -68,61 +70,9 @@ int main(int argc, const char* argv[]) {
                 printUsage();
                 return 0;
             } else {
-                if (arg.substr(0, 2) == "--" && arg.find("=") != string::npos) {
-                    vector<string> parts = split(arg.substr(2), "=");
-
-                    if (parts.size() == 2) {
-                        string key = parts[0];
-
-                        if (key == "filter") {
-                            string value = parts[1];
-
-                            inlining.addFilter(value);
-
-                            continue;
-                        }
-
-                        double value = toNumber<double>(parts[1]);
-
-                        if (key == "heavy-call-site") {
-                            Parameters::set(HEAVY_CALL_SITE, value);
-                        } else if (key == "hot-call-site") {
-                            Parameters::set(HOT_CALL_SITE, value);
-                        } else if (key == "cluster-max-size") {
-                            Parameters::set(CLUSTER_MAX_SIZE, value);
-                        } else if (key == "library-path-threshold") {
-                            Parameters::set(LIBRARY_PATH_THRESHOLD, value);
-                        } else if (key == "library-path-max-length") {
-                            Parameters::set(LIBRARY_PATH_MAX_LENGTH, value);
-                        } else if (key == "library-min-path-calls") {
-                            Parameters::set(LIBRARY_MIN_PATH_CALLS, value);
-                        } else if (key == "move-benefit-threshold") {
-                            Parameters::set(MOVE_BENEFIT_THRESHOLD, value);
-                        } else if (key == "parameters-threshold") {
-                            Parameters::set(PARAMETERS_THRESHOLD, value);
-                        } else if (key == "hierarchy-max-calls-function") {
-                            Parameters::set(HIERARCHY_MAX_CALLS_FUNCTION, value);
-                        } else if (key == "hierarchy-min-called-functions") {
-                            Parameters::set(HIERARCHY_MIN_CALLED_FUNCTIONS, value);
-                        } else if (key == "hierarchy-min-calls") {
-                            Parameters::set(HIERARCHY_MIN_CALLS, value);
-                        } else if (key == "heuristic-function-parameter-cost") {
-                            Parameters::set(HEURISTIC_FUNCTION_PARAMETER_COST, value);
-                        } else if (key == "heuristic-function-virtuality-cost") {
-                            Parameters::set(HEURISTIC_FUNCTION_VIRTUALITY_COST, value);
-                        } else if (key == "heuristic-call-site-parameter-cost") {
-                            Parameters::set(HEURISTIC_CALL_SITE_PARAMETER_COST, value);
-                        } else if (key == "heuristic-call-site-virtuality-cost") {
-                            Parameters::set(HEURISTIC_CALL_SITE_VIRTUALITY_COST, value);
-                        } else if (key == "heuristic-library-cost") {
-                            Parameters::set(HEURISTIC_LIBRARY_COST, value);
-                        } else {
-                            cout << "Unrecognized parameter : " << arg << endl;
-                            return 1;
-                        }
-
-                        continue;
-                    }
+                //Try to parse it as a value arg (--x=value)
+                if(parse_value_arg(arg, inlining)){
+                    continue;
                 }
 
                 cout << "Unrecognized option : " << arg << endl;
@@ -142,6 +92,69 @@ int main(int argc, const char* argv[]) {
     inlining.analyze(file);
 
     return 0;
+}
+
+bool parse_value_arg(const std::string& arg, Inlining& inlining){
+    if (arg.substr(0, 2) == "--" && arg.find("=") != string::npos) {
+        return false;
+    }
+
+    vector<string> parts = split(arg.substr(2), "=");
+
+    if (parts.size() == 2) {
+        string key = parts[0];
+
+        if (key == "filter") {
+            string value = parts[1];
+
+            inlining.addFilter(value);
+
+            return true;
+        }
+
+        double value = toNumber<double>(parts[1]);
+
+        if (key == "heavy-call-site") {
+            Parameters::set(HEAVY_CALL_SITE, value);
+        } else if (key == "hot-call-site") {
+            Parameters::set(HOT_CALL_SITE, value);
+        } else if (key == "cluster-max-size") {
+            Parameters::set(CLUSTER_MAX_SIZE, value);
+        } else if (key == "library-path-threshold") {
+            Parameters::set(LIBRARY_PATH_THRESHOLD, value);
+        } else if (key == "library-path-max-length") {
+            Parameters::set(LIBRARY_PATH_MAX_LENGTH, value);
+        } else if (key == "library-min-path-calls") {
+            Parameters::set(LIBRARY_MIN_PATH_CALLS, value);
+        } else if (key == "move-benefit-threshold") {
+            Parameters::set(MOVE_BENEFIT_THRESHOLD, value);
+        } else if (key == "parameters-threshold") {
+            Parameters::set(PARAMETERS_THRESHOLD, value);
+        } else if (key == "hierarchy-max-calls-function") {
+            Parameters::set(HIERARCHY_MAX_CALLS_FUNCTION, value);
+        } else if (key == "hierarchy-min-called-functions") {
+            Parameters::set(HIERARCHY_MIN_CALLED_FUNCTIONS, value);
+        } else if (key == "hierarchy-min-calls") {
+            Parameters::set(HIERARCHY_MIN_CALLS, value);
+        } else if (key == "heuristic-function-parameter-cost") {
+            Parameters::set(HEURISTIC_FUNCTION_PARAMETER_COST, value);
+        } else if (key == "heuristic-function-virtuality-cost") {
+            Parameters::set(HEURISTIC_FUNCTION_VIRTUALITY_COST, value);
+        } else if (key == "heuristic-call-site-parameter-cost") {
+            Parameters::set(HEURISTIC_CALL_SITE_PARAMETER_COST, value);
+        } else if (key == "heuristic-call-site-virtuality-cost") {
+            Parameters::set(HEURISTIC_CALL_SITE_VIRTUALITY_COST, value);
+        } else if (key == "heuristic-library-cost") {
+            Parameters::set(HEURISTIC_LIBRARY_COST, value);
+        } else {
+            cout << "Unrecognized parameter : " << arg << endl;
+            return false;
+        }
+
+        return true;
+    }
+
+    return false;
 }
 
 void printUsage() {
